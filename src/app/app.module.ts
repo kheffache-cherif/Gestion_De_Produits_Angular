@@ -12,6 +12,8 @@ import { RechercheParCategorieComponent } from './recherche-par-categorie/recher
 import { RechercheParNomComponent } from './recherche-par-nom/recherche-par-nom.component';
 import { SearchFilterPipe } from './search-filter.pipe';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { ListeCategoriesComponent } from './liste-categories/liste-categories.component';
+import { UpdateCategorieComponent } from './update-categorie/update-categorie.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     RechercheParCategorieComponent,
     RechercheParNomComponent,
     SearchFilterPipe,
+    ListeCategoriesComponent,
+    UpdateCategorieComponent,
   ],
   imports: [
     BrowserModule,
