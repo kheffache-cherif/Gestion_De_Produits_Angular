@@ -2,50 +2,37 @@ import { Injectable } from '@angular/core';
 import { Categorie } from '../model/categorie.model';
 import { Produit } from '../model/produit.model';
 
+import { Observable } from 'rxjs'; //import de l'observable
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // //import de http
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class ProduitService {
-  produits: Produit[];
-  categories: Categorie[];
+  apiURL: string = 'http://localhost:8085/produits/api'; // creation de la variable url
 
-  constructor() {
-    //console.log("creation de l'instance du service ");
-    this.categories = [
-      { idCat: 1, nomCat: 'PC' },
-      { idCat: 2, nomCat: 'Imprimante' },
-    ];
-    this.produits = [
-      {
-        idProduit: 1,
-        nomProduit: 'PC  Mac',
-        prixProduit: 3000.6,
-        dateCreation: new Date('01/14/2011'),
-        category: { idCat: 1, nomCat: 'PC' },
-      },
-      {
-        idProduit: 2,
-        nomProduit: 'Imprimante Epson',
-        prixProduit: 450,
-        dateCreation: new Date('12/17/2010'),
-        category: { idCat: 2, nomCat: 'Imprimante' },
-      },
-      {
-        idProduit: 3,
-        nomProduit: 'Tablette Samsung',
-        prixProduit: 900.123,
-        dateCreation: new Date('02/20/2020'),
-        category: { idCat: 1, nomCat: 'PC' },
-      },
-    ];
+  produits!: Produit[];
+  //categories: Categorie[];
+
+  constructor(private http: HttpClient) {} //
+
+  listeProduit(): Observable<Produit[]> {
+    return this.http.get<Produit[]>(this.apiURL);
   }
-  listeProduits(): Produit[] {
-    return this.produits;
+
+  ajouterProduit(prod: Produit): Observable<Produit> {
+    return this.http.post<Produit>(this.apiURL, prod, httpOptions);
   }
-  ajouterProduit(prod: Produit) {
-    this.produits.push(prod);
+
+  supprimerProduit(id: number) {
+    const url = `${this.apiURL}/${id}`;
+    return this.http.delete(url, httpOptions);
   }
-  supprimerProduit(prod: Produit) {
+  /*  DeleteProduit(prod: Produit) {
     //supprimer le produit prod du tableau produits
     const index = this.produits.indexOf(prod, 0);
     if (index > -1) {
@@ -54,17 +41,15 @@ export class ProduitService {
     //ou Bien
     /* this.produits.forEach((cur, index) => {
       if(prod.idProduit === cur.idProduit) {
-         this.produits.splice(index, 1); } }); */
-  }
-  consulterProduit(id: number): Produit {
-    return this.produits.find((p) => p.idProduit == id)!;
+         this.produits.splice(index, 1); } });
+  } */
+  consulterProduit(id: number): Observable<Produit> {
+    const url = `${this.apiURL}/${id}`;
+    return this.http.get<Produit>(url);
   }
 
-  updateProduit(p: Produit) {
-    // console.log(p);
-    this.supprimerProduit(p);
-    this.ajouterProduit(p);
-    this.trierProduits();
+  updateProduit(prod: Produit): Observable<Produit> {
+    return this.http.put<Produit>(this.apiURL, prod, httpOptions);
   }
 
   trierProduits() {
@@ -79,10 +64,10 @@ export class ProduitService {
     });
   }
 
-  listeCategories(): Categorie[] {
+  /*  listeCategories(): Categorie[] {
     return this.categories;
   }
   consulterCategorie(id: number): Categorie {
     return this.categories.find((cat) => cat.idCat == id)!;
-  }
+  } */
 }

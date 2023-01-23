@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Categorie } from '../model/categorie.model';
 import { Produit } from '../model/produit.model';
 import { ProduitService } from '../Services/produit.service';
 
@@ -10,6 +11,8 @@ import { ProduitService } from '../Services/produit.service';
 })
 export class UpdateProduitComponent implements OnInit {
   currentProduit = new Produit();
+  categories!: Categorie[];
+  updatedCatId!: number;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -17,15 +20,16 @@ export class UpdateProduitComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //console.log(this.activatedRoute.snapshot.params['id']);
-    this.currentProduit = this.produitService.consulterProduit(
-      this.activatedRoute.snapshot.params['id']
-    );
-    console.log(this.currentProduit);
+    this.produitService
+      .consulterProduit(this.activatedRoute.snapshot.params['id'])
+      .subscribe((prod) => {
+        this.currentProduit = prod;
+      });
   }
   updateProduit() {
-    // this.produitService.updateProduit(this.currentProduit);
-    this.produitService.updateProduit(this.currentProduit);
-    this.router.navigate(['produits']);
+    this.produitService.updateProduit(this.currentProduit).subscribe((prod) => {
+      console.log('produit modifier');
+      this.router.navigate(['produits']);
+    });
   }
 }
