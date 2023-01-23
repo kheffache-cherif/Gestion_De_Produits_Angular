@@ -4,6 +4,7 @@ import { Produit } from '../model/produit.model';
 
 import { Observable } from 'rxjs'; //import de l'observable
 import { HttpClient, HttpHeaders } from '@angular/common/http'; // //import de http
+import { CategorieWrapper } from '../model/CategorieWrapped.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -14,6 +15,7 @@ const httpOptions = {
 })
 export class ProduitService {
   apiURL: string = 'http://localhost:8085/produits/api'; // creation de la variable url
+  apiURLCat: string = 'http://localhost:8085/produits/cat';
 
   produits!: Produit[];
   //categories: Categorie[];
@@ -64,7 +66,14 @@ export class ProduitService {
     });
   }
 
-  /*  listeCategories(): Categorie[] {
+  listeCategories(): Observable<CategorieWrapper> {
+    return this.http.get<CategorieWrapper>(this.apiURLCat);
+  }
+  /*  listeCategories(): Observable<Categorie[]> {
+    return this.http.get<Categorie[]>(this.apiURL + '/cat');
+  }
+
+   listeCategories(): Categorie[] {
     return this.categories;
   }
   consulterCategorie(id: number): Categorie {
